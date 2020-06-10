@@ -5,6 +5,7 @@ task :update_feed => :environment do
   require 'kconv'
   require 'rexml/document'
 
+  #チャンネル定義
   client ||= Line::Bot::Client.new { |config|
     config.channel_secret = ENV["LINE_CHANNEL_SECRET"]
     config.channel_token = ENV["LINE_CHANNEL_TOKEN"]
@@ -12,11 +13,18 @@ task :update_feed => :environment do
 
   url  = "https://www.drk7.jp/weather/xml/40.xml"
 
+  # require 'kconv'　でStringクラスに変換用のメソッドが定義される。
+  # .toutf8 で　url をutf-8に変換した文字列を返す。
   xml  = open( url ).read.toutf8
+
+  # https://docs.ruby-lang.org/ja/latest/method/REXML=3a=3aDocument/s/new.html
+  # ただの文字列だった変数xmlをパースしている。
   doc = REXML::Document.new(xml)
 
   xpath = 'weatherforecast/pref/area[2]/info/rainfallchance/'
 
+  # elements -> REXML::Elements　
+  # 要素が保持している子要素の集合を返す。
   per06to12 = doc.elements[xpath + 'period[2]'].text
   per12to18 = doc.elements[xpath + 'period[3]'].text
   per18to24 = doc.elements[xpath + 'period[4]'].text

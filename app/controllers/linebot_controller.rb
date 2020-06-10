@@ -8,6 +8,8 @@ class LinebotController < ApplicationController
   protect_from_forgery :except => [:callback]
 
   def callback
+    # postリクエスト で　callbackにアクセスすると
+    # そのリクエストを読み込む。
     body = request.body.read
     signature = request.env['HTTP_X_LINE_SIGNATURE']
     unless client.validate_signature(body, signature)
@@ -24,6 +26,8 @@ class LinebotController < ApplicationController
           
           input = event.message['text']
           url  = "https://www.drk7.jp/weather/xml/13.xml"
+          # require 'kconv'　でStringクラスに変換用のメソッドが定義される。
+          # .toutf8 で　url をutf-8に変換した文字列を返す。
           xml  = open( url ).read.toutf8
           doc = REXML::Document.new(xml)
           xpath = 'weatherforecast/pref/area[4]/'
