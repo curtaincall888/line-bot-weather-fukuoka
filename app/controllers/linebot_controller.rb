@@ -35,7 +35,7 @@ class LinebotController < ApplicationController
           min_per = 30
           case input
           
-          when /.*(明日|あした).*/
+          when /.*(明日|あした|あす|翌日|よくじつ).*/
           
             per06to12 = doc.elements[xpath + 'info[2]/rainfallchance/period[2]'].text
             per12to18 = doc.elements[xpath + 'info[2]/rainfallchance/period[3]'].text
