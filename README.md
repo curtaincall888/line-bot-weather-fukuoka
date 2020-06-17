@@ -37,7 +37,7 @@
 
 <img src= "https://user-images.githubusercontent.com/61185362/84488495-3c6fda00-acdb-11ea-8a6e-fd8c0ac4f246.png" width= 300px >
 
-もしくは、Lineで[ホーム]>[友だち追加]>[検索]から <strong>ID : @731rxlze</strong> を友だちに追加して下さい。
+もしくは、Lineで[ホーム] > [友だち追加] > [検索]から <strong>ID : @731rxlze</strong> を友だちに追加して下さい。
 ## 主な機能
 
 ### チャット機能
