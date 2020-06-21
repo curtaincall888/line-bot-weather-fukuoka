@@ -38,8 +38,8 @@ task :update_feed => :environment do
        "目、開いてないよ？w",
        "おは〜〜"].sample
     word2 =
-      ["朝ごはん食べた？"
-       "調子どう？"
+      ["朝ごはん食べた？",
+       "調子どう？",
        "支度は済んだと？"].sample
     push ="#{word1}\n#{word2}\n今日は雨降らんそうやし、一日頑張れそうやね！\n"
     user_ids = User.all.pluck(:line_id)
