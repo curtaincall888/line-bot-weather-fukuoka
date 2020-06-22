@@ -25,12 +25,12 @@ class LinebotController < ApplicationController
         when Line::Bot::Event::MessageType::Text
           
           input = event.message['text']
-          url  = "https://www.drk7.jp/weather/xml/13.xml"
+          url  = "https://www.drk7.jp/weather/xml/40.xml"
           # require 'kconv'　でStringクラスに変換用のメソッドが定義される。
           # .toutf8 で　url をutf-8に変換した文字列を返す。
           xml  = open( url ).read.toutf8
           doc = REXML::Document.new(xml)
-          xpath = 'weatherforecast/pref/area[4]/'
+          xpath = 'weatherforecast/pref/area[2]/'
           
           min_per = 30
           case input
