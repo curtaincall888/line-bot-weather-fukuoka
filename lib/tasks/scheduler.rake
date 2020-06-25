@@ -13,19 +13,25 @@ task :update_feed => :environment do
 
   url = "https://www.drk7.jp/weather/xml/40.xml"
   url_tokyo = "https://www.drk7.jp/weather/xml/13.xml"
+  url_nagoya = "https://www.drk7.jp/weather/xml/23.xml"
+
 
   # require 'kconv'　でStringクラスに変換用のメソッドが定義される。
   # .toutf8 で　url をutf-8に変換した文字列を返す。
   xml  = open( url ).read.toutf8
   xml_t  = open( url_tokyo ).read.toutf8
+  xml_n  = open( url_nagoya ).read.toutf8
 
   # https://docs.ruby-lang.org/ja/latest/method/REXML=3a=3aDocument/s/new.html
   # ただの文字列だった変数xmlをパースしている。
   doc = REXML::Document.new(xml)
   doc_t = REXML::Document.new(xml_t)
+  doc_n = REXML::Document.new(xml_n)
 
   xpath = 'weatherforecast/pref/area[2]/info/rainfallchance/'
   xpath_t = 'weatherforecast/pref/area[4]/info/weather/'
+  xpath_n = 'weatherforecast/pref/area[2]/info/weather/'
+
 
   # elements -> REXML::Elements　
   # 要素が保持している子要素の集合を返す。
@@ -33,7 +39,8 @@ task :update_feed => :environment do
   per12to18 = doc.elements[xpath + 'period[3]'].text
   per18to24 = doc.elements[xpath + 'period[4]'].text
 
-  tokyo_weather = doc.elements[xpath_t].text
+  tokyo_weather = doc_t.elements[xpath_t].text
+  nagoya_weather = doc_n.elements[xpath_n].text
 
 
   min_per = 20
@@ -47,7 +54,7 @@ task :update_feed => :environment do
       ["朝ごはん食べた？",
        "調子どう？",
        "支度は済んだと？"].sample
-    push ="#{word1}\n#{word2}\n今日は雨降らんそうやし、一日頑張れそうやね！\n全国の天気：\n東京：#{tokyo_weather}"
+    push ="#{word1}\n#{word2}\n今日は雨降らんそうやし、一日頑張れそうやね！\n全国の天気：\n東京：#{tokyo_weather}\n名古屋：#{nagoya_weather}"
     user_ids = User.all.pluck(:line_id)
     message = {
       type: 'text',
@@ -78,7 +85,7 @@ task :update_feed => :environment do
     end
 
     push =
-      "#{word1}\n#{word3}\n降水確率はこんな感じよ！\n　  6〜12時　#{per06to12}％\n　12〜18時　 #{per12to18}％\n　18〜24時　#{per18to24}％\n#{word2}\n全国の天気：\n東京：#{tokyo_weather}"
+      "#{word1}\n#{word3}\n降水確率はこんな感じよ！\n　  6〜12時　#{per06to12}％\n　12〜18時　 #{per12to18}％\n　18〜24時　#{per18to24}％\n#{word2}\n全国の天気：\n東京：#{tokyo_weather}\n名古屋：#{nagoya_weather}"
 
     user_ids = User.all.pluck(:line_id)
     message = {
