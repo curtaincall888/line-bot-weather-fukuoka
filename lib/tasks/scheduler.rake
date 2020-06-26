@@ -50,7 +50,7 @@ task :update_feed => :environment do
 
 
   min_per = 20
-  if per06to12.to_i < min_per || per12to18.to_i < min_per || per18to24.to_i < min_per
+  if per06to12.to_i < min_per && per12to18.to_i < min_per && per18to24.to_i < min_per
 
     word1 =
       ["おはよう！！",
