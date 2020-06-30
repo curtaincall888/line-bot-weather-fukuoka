@@ -36,8 +36,6 @@ class LinebotController < ApplicationController
           xpath = 'weatherforecast/pref/area[2]/'
           xpath_t = 'weatherforecast/pref/area[4]/info/weather/'
 
-          tokyo_weather = doc_t.elements[xpath_t].text
-
           min_per = 30
           case input
           
@@ -70,6 +68,7 @@ class LinebotController < ApplicationController
             push =
               "こんにちは。\n声ばかけてくれてありがとう\n今日があなたにとってよか日になりますように(^^)"
           when /.*(東京|とうきょう|トウキョウ|tokyo).*/
+            tokyo_weather = doc_t.elements[xpath_t].text
             push = "東京の天気？\n今日の東京は#{tokyo_weather}よ〜！\n気を付けて行ってこんね！"
           else
             per06to12 = doc.elements[xpath + 'info/rainfallchance/period[2]l'].text
