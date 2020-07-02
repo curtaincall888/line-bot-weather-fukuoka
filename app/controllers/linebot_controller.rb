@@ -28,17 +28,22 @@ class LinebotController < ApplicationController
           url  = "https://www.drk7.jp/weather/xml/40.xml"
           url_tokyo = "https://www.drk7.jp/weather/xml/13.xml"
           url_nagoya = "https://www.drk7.jp/weather/xml/23.xml"
+          url_osaka = "https://www.drk7.jp/weather/xml/27.xml"
+          
           # require 'kconv'　でStringクラスに変換用のメソッドが定義される。
           # .toutf8 で　url をutf-8に変換した文字列を返す。
           xml  = open( url ).read.toutf8
           xml_t  = open( url_tokyo ).read.toutf8
           xml_n  = open( url_nagoya ).read.toutf8
+          xml_o  = open( url_osaka ).read.toutf8
           doc = REXML::Document.new(xml)
           doc_t = REXML::Document.new(xml_t)
           doc_n = REXML::Document.new(xml_n)
+          doc_o = REXML::Document.new(xml_o)
           xpath = 'weatherforecast/pref/area[2]/'
           xpath_t = 'weatherforecast/pref/area[4]/info/weather/'
           xpath_n = 'weatherforecast/pref/area[2]/info/weather/'
+          xpath_o = 'weatherforecast/pref/area[1]/info/weather/'
 
           min_per = 30
           case input
@@ -77,6 +82,9 @@ class LinebotController < ApplicationController
           when /.*(名古屋|なごや|ナゴヤ|nagoya).*/
             nagoya_weather = doc_n.elements[xpath_n].text
             push = "名古屋の天気？\n今日の名古屋は#{nagoya_weather}よ〜！\n気を付けて行ってこんね！"
+          when /.*(大阪|おおさか|オオサカ|osaka).*/
+            osaka_weather = doc_o.elements[xpath_o].text
+            push = "大阪の天気？\n今日の大阪は#{osaka_weather}よ〜！\n気を付けて行ってこんね！"
           else
             per06to12 = doc.elements[xpath + 'info/rainfallchance/period[2]l'].text
             per12to18 = doc.elements[xpath + 'info/rainfallchance/period[3]l'].text
