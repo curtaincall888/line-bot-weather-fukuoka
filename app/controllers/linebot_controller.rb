@@ -41,7 +41,7 @@ class LinebotController < ApplicationController
           doc_n = REXML::Document.new(xml_n)
           doc_o = REXML::Document.new(xml_o)
           xpath = 'weatherforecast/pref/area[2]/'
-          xpath_t = 'weatherforecast/pref/area[4]/info/weather/'
+          xpath_t = 'weatherforecast/pref/area[4]/'
           xpath_n = 'weatherforecast/pref/area[2]/info/weather/'
           xpath_o = 'weatherforecast/pref/area[1]/info/weather/'
 
@@ -77,8 +77,10 @@ class LinebotController < ApplicationController
             push =
               "こんにちは。\n声ばかけてくれてありがとう\n今日があなたにとってよか日になりますように(^^)"
           when /.*(東京|とうきょう|トウキョウ|tokyo).*/
-            tokyo_weather = doc_t.elements[xpath_t].text
-            push = "東京の天気？\n今日の東京は#{tokyo_weather}よ〜！\n気を付けて行ってこんね！"
+            tokyo_weather = doc_t.elements[xpath_t + 'info/weather/'].text
+            tokyo_centigrade_max = doc_t.elements[xpath_t + 'info/temperature/range[1]'].text
+            tokyo_centigrade_min = doc_t.elements[xpath_t + 'info/temperature/range[2]'].text
+            push = "東京の天気？\n今日の東京は#{tokyo_weather}よ〜！\n最高気温は#{tokyo_centigrade_max}℃\n最低気温は#{tokyo_centigrade_min}℃\n気を付けて行ってこんね！"
           when /.*(名古屋|なごや|ナゴヤ|nagoya).*/
             nagoya_weather = doc_n.elements[xpath_n].text
             push = "名古屋の天気？\n今日の名古屋は#{nagoya_weather}よ〜！\n気を付けて行ってこんね！"
