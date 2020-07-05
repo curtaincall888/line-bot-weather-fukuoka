@@ -42,7 +42,7 @@ class LinebotController < ApplicationController
           doc_o = REXML::Document.new(xml_o)
           xpath = 'weatherforecast/pref/area[2]/'
           xpath_t = 'weatherforecast/pref/area[4]/'
-          xpath_n = 'weatherforecast/pref/area[2]/info/weather/'
+          xpath_n = 'weatherforecast/pref/area[2]/'
           xpath_o = 'weatherforecast/pref/area[1]/info/weather/'
 
           min_per = 30
@@ -82,8 +82,10 @@ class LinebotController < ApplicationController
             tokyo_centigrade_min = doc_t.elements[xpath_t + 'info/temperature/range[2]'].text
             push = "東京の天気？\n今日の東京は#{tokyo_weather}よ〜！\n最高気温は#{tokyo_centigrade_max}℃\n最低気温は#{tokyo_centigrade_min}℃\n気を付けて行ってこんね！"
           when /.*(名古屋|なごや|ナゴヤ|nagoya).*/
-            nagoya_weather = doc_n.elements[xpath_n].text
-            push = "名古屋の天気？\n今日の名古屋は#{nagoya_weather}よ〜！\n気を付けて行ってこんね！"
+            nagoya_weather = doc_n.elements[xpath_n + 'info/weather/'].text
+            nagoya_centigrade_max = doc_t.elements[xpath_t + 'info/temperature/range[1]'].text
+            nagoya_centigrade_min = doc_t.elements[xpath_t + 'info/temperature/range[2]'].text
+            push = "名古屋の天気？\n今日の名古屋は#{nagoya_weather}よ〜！\n最高気温は#{nagoya_centigrade_max}℃\n最低気温は#{nagoya_centigrade_min}℃\n気を付けて行ってこんね！"
           when /.*(大阪|おおさか|オオサカ|osaka).*/
             osaka_weather = doc_o.elements[xpath_o].text
             push = "大阪の天気？\n今日の大阪は#{osaka_weather}よ〜！\n気を付けて行ってこんね！"
