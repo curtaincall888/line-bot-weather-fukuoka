@@ -25,22 +25,22 @@ class LinebotController < ApplicationController
         when Line::Bot::Event::MessageType::Text
           
           input = event.message['text']
-          url  = "https://www.drk7.jp/weather/xml/40.xml"
+          url_fukuoka  = "https://www.drk7.jp/weather/xml/40.xml"
           url_tokyo = "https://www.drk7.jp/weather/xml/13.xml"
           url_nagoya = "https://www.drk7.jp/weather/xml/23.xml"
           url_osaka = "https://www.drk7.jp/weather/xml/27.xml"
           
           # require 'kconv'　でStringクラスに変換用のメソッドが定義される。
           # .toutf8 で　url をutf-8に変換した文字列を返す。
-          xml  = open( url ).read.toutf8
+          xml_f  = open( url_fukuoka ).read.toutf8
           xml_t  = open( url_tokyo ).read.toutf8
           xml_n  = open( url_nagoya ).read.toutf8
           xml_o  = open( url_osaka ).read.toutf8
-          doc = REXML::Document.new(xml)
+          doc_f = REXML::Document.new(xml_f)
           doc_t = REXML::Document.new(xml_t)
           doc_n = REXML::Document.new(xml_n)
           doc_o = REXML::Document.new(xml_o)
-          xpath = 'weatherforecast/pref/area[2]/'
+          xpath_f = 'weatherforecast/pref/area[2]/'
           xpath_t = 'weatherforecast/pref/area[4]/'
           xpath_n = 'weatherforecast/pref/area[2]/'
           xpath_o = 'weatherforecast/pref/area[1]/'
@@ -49,9 +49,9 @@ class LinebotController < ApplicationController
           case input
           
           when /.*(明日|あした|あす|翌日|よくじつ).*/
-            per06to12 = doc.elements[xpath + 'info[2]/rainfallchance/period[2]'].text
-            per12to18 = doc.elements[xpath + 'info[2]/rainfallchance/period[3]'].text
-            per18to24 = doc.elements[xpath + 'info[2]/rainfallchance/period[4]'].text
+            per06to12 = doc_f.elements[xpath_f + 'info[2]/rainfallchance/period[2]'].text
+            per12to18 = doc_f.elements[xpath_f + 'info[2]/rainfallchance/period[3]'].text
+            per18to24 = doc_f.elements[xpath_f + 'info[2]/rainfallchance/period[4]'].text
             if per06to12.to_i >= min_per || per12to18.to_i >= min_per || per18to24.to_i >= min_per
               push =
                 "明日の天気やろ？\n明日は雨が降りそうよ(>_<)\n今んところ降水確率はこんな感じ。\n　  6〜12時　#{per06to12}％\n　12〜18時　 #{per12to18}％\n　18〜24時　#{per18to24}％\nまた明日の朝の最新の天気予報で雨が降りそうやったら教えるね！"
@@ -60,9 +60,9 @@ class LinebotController < ApplicationController
                 "明日の天気？\n明日は雨が降らんみたいよ(^^)\nまた明日の朝の最新の天気予報で雨が降りそうやったら教えるね！"
             end
           when /.*(明後日|あさって|翌々日|よくよくじつ).*/
-            per06to12 = doc.elements[xpath + 'info[3]/rainfallchance/period[2]l'].text
-            per12to18 = doc.elements[xpath + 'info[3]/rainfallchance/period[3]l'].text
-            per18to24 = doc.elements[xpath + 'info[3]/rainfallchance/period[4]l'].text
+            per06to12 = doc_f.elements[xpath_f + 'info[3]/rainfallchance/period[2]'].text
+            per12to18 = doc_f.elements[xpath_f + 'info[3]/rainfallchance/period[3]'].text
+            per18to24 = doc_f.elements[xpath_f + 'info[3]/rainfallchance/period[4]'].text
             if per06to12.to_i >= min_per || per12to18.to_i >= min_per || per18to24.to_i >= min_per
               push =
                 "明後日の天気やろ？\n何かあると？\n明後日は雨が降りそう…\n当日の朝に雨が降りそうやったら教えるけんね！"
@@ -92,9 +92,9 @@ class LinebotController < ApplicationController
             osaka_centigrade_min = doc_o.elements[xpath_o + 'info/temperature/range[2]'].text
             push = "大阪の天気？\n今日の大阪は#{osaka_weather}よ〜！\n最高気温は#{osaka_centigrade_max}℃\n最低気温は#{osaka_centigrade_min}℃\n気を付けて行ってこんね！"
           else
-            per06to12 = doc.elements[xpath + 'info/rainfallchance/period[2]l'].text
-            per12to18 = doc.elements[xpath + 'info/rainfallchance/period[3]l'].text
-            per18to24 = doc.elements[xpath + 'info/rainfallchance/period[4]l'].text
+            per06to12 = doc_f.elements[xpath_f + 'info/rainfallchance/period[2]'].text
+            per12to18 = doc_f.elements[xpath_f + 'info/rainfallchance/period[3]'].text
+            per18to24 = doc_f.elements[xpath_f + 'info/rainfallchance/period[4]'].text
             if per06to12.to_i >= min_per || per12to18.to_i >= min_per || per18to24.to_i >= min_per
               word =
                 ["雨やけど元気出していこうね！",
