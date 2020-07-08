@@ -92,10 +92,7 @@ class LinebotController < ApplicationController
             osaka_centigrade_min = doc_o.elements[xpath_o + 'info/temperature/range[2]'].text
             push = "大阪の天気？\n今日の大阪は#{osaka_weather}よ〜！\n最高気温は#{osaka_centigrade_max}℃\n最低気温は#{osaka_centigrade_min}℃\n気を付けて行ってこんね！"
           when /.*使い方.*/
-            push = "このbotは毎朝７時にその日の福岡市に雨が降るかどうかを博多弁で教えてくれます。\n
-                    また、当日から翌々日までの期間の予報であればチャットで聞くことができます。それぞれ、'あした'、'翌々日'などのキーワードが含まれると該当する日の予報を教えます。\n\n
-                    さらに東京、名古屋、大阪など全国の主要都市の当日の天気をチャットで聞けるようになりました。聞きたい都市があれば聞いてみて下さい。対応する都市は順次対応していきます。\n
-                    "
+            push = "このbotは毎朝７時にその日の福岡市に雨が降るかどうかを博多弁で教えてくれます。\n\nまた、当日から翌々日までの期間の予報であればチャットで聞くことができます。それぞれ、「あした」、「翌々日」などのキーワードが含まれると該当する日の予報を教えます。\n\nさらに東京、名古屋、大阪など全国の主要都市の当日の天気をチャットで聞けるようになりました。聞きたい都市があれば聞いてみて下さい。対応する都市は順次対応していきます。"
           else
             per06to12 = doc_f.elements[xpath_f + 'info/rainfallchance/period[2]'].text
             per12to18 = doc_f.elements[xpath_f + 'info/rainfallchance/period[3]'].text
