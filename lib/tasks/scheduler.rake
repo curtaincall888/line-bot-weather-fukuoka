@@ -60,11 +60,7 @@ task :update_feed => :environment do
       ["朝ごはん食べた？",
        "調子どう？",
        "支度は済んだと？"].sample
-<<<<<<< Updated upstream
-    push ="#{word1}\n#{word2}\n今日は雨降らんそうやし、一日頑張れそうやね！\n全国の天気：\n東京：#{tokyo_weather}\n名古屋：#{nagoya_weather}\n大阪：#{osaka_weather}"
-=======
     push ="#{word1}\n#{word2}\n今日の天気は#{fukuoka_weather}よ〜！\n今日は雨降らんそうやし、一日頑張れそうやね！\n全国の天気：\n東京：#{tokyo_weather}\n名古屋：#{nagoya_weather}\n大阪：#{osaka_weather}\n\n※このbotの「使い方」が聞きたい時はチャットで「使い方」と尋ねてみてね。"
->>>>>>> Stashed changes
     user_ids = User.all.pluck(:line_id)
     message = {
       type: 'text',
@@ -95,11 +91,7 @@ task :update_feed => :environment do
     end
 
     push =
-<<<<<<< Updated upstream
-      "#{word1}\n#{word3}\n降水確率はこんな感じよ！\n　  6〜12時　#{per06to12}％\n　12〜18時　 #{per12to18}％\n　18〜24時　#{per18to24}％\n#{word2}\n全国の天気：\n東京：#{tokyo_weather}\n名古屋：#{nagoya_weather}\n大阪：#{osaka_weather}"
-=======
       "#{word1}\n今日の天気は#{fukuoka_weather}よ〜！\n#{word3}\n降水確率はこんな感じよ！\n　  6〜12時　#{per06to12}％\n　12〜18時　 #{per12to18}％\n　18〜24時　#{per18to24}％\n#{word2}\n全国の天気：\n東京：#{tokyo_weather}\n名古屋：#{nagoya_weather}\n大阪：#{osaka_weather}\n\n※このbotの「使い方」が聞きたい時はチャットで「使い方」と尋ねてみてね。"
->>>>>>> Stashed changes
 
     user_ids = User.all.pluck(:line_id)
     message = {
