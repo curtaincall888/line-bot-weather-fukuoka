@@ -25,21 +25,33 @@ class LinebotController < ApplicationController
         when Line::Bot::Event::MessageType::Text
           
           input = event.message['text']
-          url  = "https://www.drk7.jp/weather/xml/13.xml"
+          url_fukuoka  = "https://www.drk7.jp/weather/xml/40.xml"
+          url_tokyo = "https://www.drk7.jp/weather/xml/13.xml"
+          url_nagoya = "https://www.drk7.jp/weather/xml/23.xml"
+          url_osaka = "https://www.drk7.jp/weather/xml/27.xml"
+          
           # require 'kconv'　でStringクラスに変換用のメソッドが定義される。
           # .toutf8 で　url をutf-8に変換した文字列を返す。
-          xml  = open( url ).read.toutf8
-          doc = REXML::Document.new(xml)
-          xpath = 'weatherforecast/pref/area[4]/'
-          
+          xml_f  = open( url_fukuoka ).read.toutf8
+          xml_t  = open( url_tokyo ).read.toutf8
+          xml_n  = open( url_nagoya ).read.toutf8
+          xml_o  = open( url_osaka ).read.toutf8
+          doc_f = REXML::Document.new(xml_f)
+          doc_t = REXML::Document.new(xml_t)
+          doc_n = REXML::Document.new(xml_n)
+          doc_o = REXML::Document.new(xml_o)
+          xpath_f = 'weatherforecast/pref/area[2]/'
+          xpath_t = 'weatherforecast/pref/area[4]/'
+          xpath_n = 'weatherforecast/pref/area[2]/'
+          xpath_o = 'weatherforecast/pref/area[1]/'
+
           min_per = 30
           case input
           
           when /.*(明日|あした|あす|翌日|よくじつ).*/
-          
-            per06to12 = doc.elements[xpath + 'info[2]/rainfallchance/period[2]'].text
-            per12to18 = doc.elements[xpath + 'info[2]/rainfallchance/period[3]'].text
-            per18to24 = doc.elements[xpath + 'info[2]/rainfallchance/period[4]'].text
+            per06to12 = doc_f.elements[xpath_f + 'info[2]/rainfallchance/period[2]'].text
+            per12to18 = doc_f.elements[xpath_f + 'info[2]/rainfallchance/period[3]'].text
+            per18to24 = doc_f.elements[xpath_f + 'info[2]/rainfallchance/period[4]'].text
             if per06to12.to_i >= min_per || per12to18.to_i >= min_per || per18to24.to_i >= min_per
               push =
                 "明日の天気やろ？\n明日は雨が降りそうよ(>_<)\n今んところ降水確率はこんな感じ。\n　  6〜12時　#{per06to12}％\n　12〜18時　 #{per12to18}％\n　18〜24時　#{per18to24}％\nまた明日の朝の最新の天気予報で雨が降りそうやったら教えるね！"
@@ -48,12 +60,12 @@ class LinebotController < ApplicationController
                 "明日の天気？\n明日は雨が降らんみたいよ(^^)\nまた明日の朝の最新の天気予報で雨が降りそうやったら教えるね！"
             end
           when /.*(明後日|あさって|翌々日|よくよくじつ).*/
-            per06to12 = doc.elements[xpath + 'info[3]/rainfallchance/period[2]l'].text
-            per12to18 = doc.elements[xpath + 'info[3]/rainfallchance/period[3]l'].text
-            per18to24 = doc.elements[xpath + 'info[3]/rainfallchance/period[4]l'].text
+            per06to12 = doc_f.elements[xpath_f + 'info[3]/rainfallchance/period[2]'].text
+            per12to18 = doc_f.elements[xpath_f + 'info[3]/rainfallchance/period[3]'].text
+            per18to24 = doc_f.elements[xpath_f + 'info[3]/rainfallchance/period[4]'].text
             if per06to12.to_i >= min_per || per12to18.to_i >= min_per || per18to24.to_i >= min_per
               push =
-                "明後日の天気やろ？\n何かあると？\n明後日は雨が降りそう…\n当日の朝に雨が降りそうやったら教えるけんね！"
+                "明後日の天気やろ？\n何かあると？\n明後日は雨が降りそう…\n今んところ降水確率はこんな感じ。\n　  6〜12時　#{per06to12}％\n　12〜18時　 #{per12to18}％\n　18〜24時　#{per18to24}％\n当日の朝に雨が降りそうやったら教えるけんね！"
             else
               push =
                 "明後日の天気？\n気が早かねー！何があると？\n明後日は雨は降らんみたいよ(^^)\nまた当日の朝の最新の天気予報で雨が降りそうやったら教えるけんね！"
@@ -64,10 +76,27 @@ class LinebotController < ApplicationController
           when /.*(こんにちは|こんばんは|初めまして|はじめまして|おはよう).*/
             push =
               "こんにちは。\n声ばかけてくれてありがとう\n今日があなたにとってよか日になりますように(^^)"
+          when /.*(東京|とうきょう|トウキョウ|tokyo).*/
+            tokyo_weather = doc_t.elements[xpath_t + 'info/weather/'].text
+            tokyo_centigrade_max = doc_t.elements[xpath_t + 'info/temperature/range[1]'].text
+            tokyo_centigrade_min = doc_t.elements[xpath_t + 'info/temperature/range[2]'].text
+            push = "東京の天気？\n今日の東京は#{tokyo_weather}よ〜！\n最高気温は#{tokyo_centigrade_max}℃\n最低気温は#{tokyo_centigrade_min}℃\n気を付けて行ってこんね！"
+          when /.*(名古屋|なごや|ナゴヤ|nagoya).*/
+            nagoya_weather = doc_n.elements[xpath_n + 'info/weather/'].text
+            nagoya_centigrade_max = doc_n.elements[xpath_n + 'info/temperature/range[1]'].text
+            nagoya_centigrade_min = doc_n.elements[xpath_n + 'info/temperature/range[2]'].text
+            push = "名古屋の天気？\n今日の名古屋は#{nagoya_weather}よ〜！\n最高気温は#{nagoya_centigrade_max}℃\n最低気温は#{nagoya_centigrade_min}℃\n気を付けて行ってこんね！"
+          when /.*(大阪|おおさか|オオサカ|osaka).*/
+            osaka_weather = doc_o.elements[xpath_o + 'info/weather/'].text
+            osaka_centigrade_max = doc_o.elements[xpath_o + 'info/temperature/range[1]'].text
+            osaka_centigrade_min = doc_o.elements[xpath_o + 'info/temperature/range[2]'].text
+            push = "大阪の天気？\n今日の大阪は#{osaka_weather}よ〜！\n最高気温は#{osaka_centigrade_max}℃\n最低気温は#{osaka_centigrade_min}℃\n気を付けて行ってこんね！"
+          when /.*使い方.*/
+            push = "このbotは毎朝７時にその日の福岡市に雨が降るかどうかを博多弁で教えてくれます。\n\nまた、当日から翌々日までの期間の予報であればチャットで聞くことができます。それぞれ、「あした」、「翌々日」などのキーワードが含まれると該当する日の予報を教えます。\n\nさらに東京、名古屋、大阪など全国の主要都市の当日の天気をチャットで聞けるようになりました。聞きたい都市があれば聞いてみて下さい。対応する都市は順次対応していきます。"
           else
-            per06to12 = doc.elements[xpath + 'info/rainfallchance/period[2]l'].text
-            per12to18 = doc.elements[xpath + 'info/rainfallchance/period[3]l'].text
-            per18to24 = doc.elements[xpath + 'info/rainfallchance/period[4]l'].text
+            per06to12 = doc_f.elements[xpath_f + 'info/rainfallchance/period[2]'].text
+            per12to18 = doc_f.elements[xpath_f + 'info/rainfallchance/period[3]'].text
+            per18to24 = doc_f.elements[xpath_f + 'info/rainfallchance/period[4]'].text
             if per06to12.to_i >= min_per || per12to18.to_i >= min_per || per18to24.to_i >= min_per
               word =
                 ["雨やけど元気出していこうね！",
@@ -87,7 +116,9 @@ class LinebotController < ApplicationController
           end
           
         else
-          push = "テキスト以外はわからんば〜い(；；)"
+          push = ["テキスト以外はわからんば〜い(；；)",
+                  "天気のことを聞いてよ？",
+                  "何それ、美味しいの？w"].sample
         end
         message = {
           type: 'text',

@@ -11,7 +11,7 @@ task :update_feed => :environment do
     config.channel_token = ENV["LINE_CHANNEL_TOKEN"]
   }
 
-  url = "https://www.drk7.jp/weather/xml/40.xml"
+  url_fukuoka = "https://www.drk7.jp/weather/xml/40.xml"
   url_tokyo = "https://www.drk7.jp/weather/xml/13.xml"
   url_nagoya = "https://www.drk7.jp/weather/xml/23.xml"
   url_osaka = "https://www.drk7.jp/weather/xml/27.xml"
@@ -19,7 +19,7 @@ task :update_feed => :environment do
 
   # require 'kconv'　でStringクラスに変換用のメソッドが定義される。
   # .toutf8 で　url をutf-8に変換した文字列を返す。
-  xml  = open( url ).read.toutf8
+  xml_f  = open( url_fukuoka ).read.toutf8
   xml_t  = open( url_tokyo ).read.toutf8
   xml_n  = open( url_nagoya ).read.toutf8
   xml_o  = open( url_osaka ).read.toutf8
@@ -27,12 +27,12 @@ task :update_feed => :environment do
 
   # https://docs.ruby-lang.org/ja/latest/method/REXML=3a=3aDocument/s/new.html
   # ただの文字列だった変数xmlをパースしている。
-  doc = REXML::Document.new(xml)
+  doc_f = REXML::Document.new(xml_f)
   doc_t = REXML::Document.new(xml_t)
   doc_n = REXML::Document.new(xml_n)
   doc_o = REXML::Document.new(xml_o)
 
-  xpath = 'weatherforecast/pref/area[2]/info/rainfallchance/'
+  xpath_f = 'weatherforecast/pref/area[2]/info/'
   xpath_t = 'weatherforecast/pref/area[4]/info/weather/'
   xpath_n = 'weatherforecast/pref/area[2]/info/weather/'
   xpath_o = 'weatherforecast/pref/area[1]/info/weather/'
@@ -40,9 +40,9 @@ task :update_feed => :environment do
 
   # elements -> REXML::Elements　
   # 要素が保持している子要素の集合を返す。
-  per06to12 = doc.elements[xpath + 'period[2]'].text
-  per12to18 = doc.elements[xpath + 'period[3]'].text
-  per18to24 = doc.elements[xpath + 'period[4]'].text
+  per06to12 = doc_f.elements[xpath_f + 'rainfallchance/period[2]'].text
+  per12to18 = doc_f.elements[xpath_f + 'rainfallchance/period[3]'].text
+  per18to24 = doc_f.elements[xpath_f + 'rainfallchance/period[4]'].text
 
   tokyo_weather = doc_t.elements[xpath_t].text
   nagoya_weather = doc_n.elements[xpath_n].text
