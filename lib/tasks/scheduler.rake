@@ -47,10 +47,10 @@ task :update_feed => :environment do
   tokyo_weather = doc_t.elements[xpath_t].text
   nagoya_weather = doc_n.elements[xpath_n].text
   osaka_weather = doc_o.elements[xpath_o].text
-
+  fukuoka_weather = doc_f.elements[xpath_f + 'weather/'].text
 
   min_per = 20
-  if per06to12.to_i < min_per && per12to18.to_i < min_per && per18to24.to_i < min_per
+  if per06to12.to_i <= min_per && per12to18.to_i <= min_per && per18to24.to_i <= min_per
 
     word1 =
       ["おはよう！！",
@@ -60,7 +60,7 @@ task :update_feed => :environment do
       ["朝ごはん食べた？",
        "調子どう？",
        "支度は済んだと？"].sample
-    push ="#{word1}\n#{word2}\n今日は雨降らんそうやし、一日頑張れそうやね！\n全国の天気：\n東京：#{tokyo_weather}\n名古屋：#{nagoya_weather}\n大阪：#{osaka_weather}\n\n※このbotの「使い方」が聞きたい時はチャットで「使い方」と尋ねてみてね。"
+    push ="#{word1}\n#{word2}\n今日の天気は#{fukuoka_weather}よ〜！\n今日は雨降らんそうやし、一日頑張れそうやね！\n全国の天気：\n東京：#{tokyo_weather}\n名古屋：#{nagoya_weather}\n大阪：#{osaka_weather}\n\n※このbotの「使い方」が聞きたい時はチャットで「使い方」と尋ねてみてね。"
     user_ids = User.all.pluck(:line_id)
     message = {
       type: 'text',
@@ -69,7 +69,7 @@ task :update_feed => :environment do
     response = client.multicast(user_ids, message)
   end
 
-  if per06to12.to_i >= min_per || per12to18.to_i >= min_per || per18to24.to_i >= min_per
+  if per06to12.to_i > min_per || per12to18.to_i > min_per || per18to24.to_i > min_per
     word1 =
       ["いい朝やね！",
        "今日もよく眠れた？",
@@ -91,7 +91,7 @@ task :update_feed => :environment do
     end
 
     push =
-      "#{word1}\n#{word3}\n降水確率はこんな感じよ！\n　  6〜12時　#{per06to12}％\n　12〜18時　 #{per12to18}％\n　18〜24時　#{per18to24}％\n#{word2}\n全国の天気：\n東京：#{tokyo_weather}\n名古屋：#{nagoya_weather}\n大阪：#{osaka_weather}\n\n※このbotの「使い方」が聞きたい時はチャットで「使い方」と尋ねてみてね。"
+      "#{word1}\n今日の天気は#{fukuoka_weather}よ〜！\n#{word3}\n降水確率はこんな感じよ！\n　  6〜12時　#{per06to12}％\n　12〜18時　 #{per12to18}％\n　18〜24時　#{per18to24}％\n#{word2}\n全国の天気：\n東京：#{tokyo_weather}\n名古屋：#{nagoya_weather}\n大阪：#{osaka_weather}\n\n※このbotの「使い方」が聞きたい時はチャットで「使い方」と尋ねてみてね。"
 
     user_ids = User.all.pluck(:line_id)
     message = {
