@@ -1,9 +1,6 @@
 ## line-bot-weather-fukuoka
 
-![Rails](https://img.shields.io/badge/5.2.1-Rails-CC0000.svg?logo=rails&style=plastic)
-![Ruby](https://img.shields.io/badge/2.5.1-Ruby-CC342D.svg?logo=ruby&style=plastic)
-![Postgresql](https://img.shields.io/badge/-Postgresql-336791.svg?logo=postgresql&style=plastic)
-![Heroku](https://img.shields.io/badge/-Heroku-430098.svg?logo=heroku&style=plastic)
+![Rails](https://img.shields.io/badge/5.2.1-Rails-CC0000.svg?logo=rails&style=plastic) ![Ruby](https://img.shields.io/badge/2.5.1-Ruby-CC342D.svg?logo=ruby&style=plastic) ![Postgresql](https://img.shields.io/badge/-Postgresql-336791.svg?logo=postgresql&style=plastic) ![Heroku](https://img.shields.io/badge/-Heroku-430098.svg?logo=heroku&style=plastic) <img src="https://img.shields.io/badge/-Git-F05032.svg?logo=git&style=plastic"> <img src="https://img.shields.io/badge/-Github-181717.svg?logo=github&style=plastic">
 
 ## チャンネル名
 
